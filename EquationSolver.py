@@ -5,15 +5,8 @@ from numpy import concatenate
 # uses inverse matrix method
 # must be in format <number>+<number>=<number>; coefficients are assumed
 def solve(eqs):
-    for i in eqs:
-        rightEq = matrix([int(j) for j in i.split("=")[0].split("+")])
-        leftEq = matrix([int(i.split("=")[1])])
-        if locals().has_key("rightSide"):
-            rightSide = concatenate((rightSide, rightEq))
-            leftSide = concatenate((leftSide, leftEq))
-        else:
-            rightSide = rightEq
-            leftSide = leftEq
+    rightSide = matrix(([i[:-1] for i in eqs]))
+    leftSide = matrix(([[i[-1]] for i in eqs]))
     return (rightSide.I*leftSide).T.tolist()[0] # transpose for 1 row matrix
         
 
@@ -44,7 +37,9 @@ def removeVariables(eqs):
     variableNames = [re.sub("-?[0-9]", "", i) for i in cleanedVariables[0]]
 
     # join right and left side for an equation that fits into the solve method above
-    equations = ["+".join(left)+"="+right[0] for left, right in zip(leftCoefficients, rightCoefficients)]
+    equations = [left+right for left, right in zip(leftCoefficients, rightCoefficients)]
+    print equations
+    equations = [[int(i) for i in j] for j in equations]
 
     return variableNames, equations
     
