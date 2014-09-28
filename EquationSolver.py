@@ -38,7 +38,6 @@ def removeVariables(eqs):
 
     # join right and left side for an equation that fits into the solve method above
     equations = [left+right for left, right in zip(leftCoefficients, rightCoefficients)]
-    print equations
     equations = [[int(i) for i in j] for j in equations]
 
     return variableNames, equations
