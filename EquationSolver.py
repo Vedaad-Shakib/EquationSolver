@@ -20,11 +20,18 @@ def solve(eqs):
 def cleanOperators(eqs):
     return eqs
 
+# checks and adds a coefficient of 1 to number without coefficient
+def checkCoefficient(i):
+    if i.count("-") == 0:
+        return i if i[0].isdigit() else "1"+i
+    else:
+        return i if i[1].isdigit() else "-1"+i[1:]
+    
 # separates variable names and cleaned equations - reorders variables if not in correct order
 # note: these few lines of code took around 45 minutes to produce :P
 def removeVariables(eqs):
     # puts all variables and coefficients in array variables, adding 1 if no coefficient exists
-    variables = [["1"+i if not i[0].isdigit() else i for i in re.findall("[0-9]*[a-zA-Z]+", eq)] for eq in eqs]
+    variables = [[checkCoefficient(i) for i in re.findall("-?[0-9]*[a-zA-Z]+", eq)] for eq in eqs]
 
     # gets the right side of the equation
     rightCoefficients = [[i.split("=")[1]] for i in eqs]
@@ -34,7 +41,7 @@ def removeVariables(eqs):
 
     # gets names of variables and coefficients of variables
     leftCoefficients = [[re.sub("[a-zA-Z]", "", i) for i in j] for j in cleanedVariables]
-    variableNames = [re.sub("[0-9]", "", i) for i in cleanedVariables[0]]
+    variableNames = [re.sub("-?[0-9]", "", i) for i in cleanedVariables[0]]
 
     # join right and left side for an equation that fits into the solve method above
     equations = ["+".join(left)+"="+right[0] for left, right in zip(leftCoefficients, rightCoefficients)]
